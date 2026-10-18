@@ -251,6 +251,66 @@ body.drawing-completed .divine-highlight-path {
   filter: none !important;
 }
 
+/* Ambient Audio Activation Floating Banner (Only shown if browser blocks unmuted autoplay) */
+.audio-prompt {
+  position: absolute;
+  bottom: 74px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(18, 12, 6, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 181, 71, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9), 0 0 18px rgba(255, 138, 36, 0.35);
+  color: var(--color-gold-light);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  animation: promptPulse 2s ease-in-out infinite, fadeInDock 0.6s ease-out;
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+  pointer-events: auto;
+  user-select: none;
+}
+
+.audio-prompt.hidden {
+  opacity: 0;
+  transform: translate(-50%, 10px);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.audio-prompt-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audio-prompt-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: var(--color-gold-bright);
+}
+
+@keyframes promptPulse {
+  0%, 100% {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9), 0 0 14px rgba(255, 138, 36, 0.25);
+    border-color: rgba(255, 181, 71, 0.35);
+  }
+  50% {
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.9), 0 0 24px rgba(255, 138, 36, 0.55);
+    border-color: rgba(255, 181, 71, 0.75);
+  }
+}
+
 /* Bottom Glassmorphic Floating Control Dock */
 .control-dock {
   position: absolute;
@@ -562,6 +622,12 @@ body.static-mode #group-simhavahana-lion {
   .creator-modal-card {
     padding: 24px 18px 20px;
     max-height: 90vh;
+  }
+  .audio-prompt {
+    bottom: 66px;
+    font-size: 0.74rem;
+    padding: 6px 14px;
+    white-space: nowrap;
   }
   .sacred-shloka {
     display: none;

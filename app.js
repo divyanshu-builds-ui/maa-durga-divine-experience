@@ -452,11 +452,16 @@
 
   // --- Button Listeners ---
 
-  // Replay Button: Full reset & fresh restart!
+  // Replay Button: Smooth in-place redraw & guaranteed audio playback!
   if (btnRefresh) {
-    btnRefresh.addEventListener('click', () => {
-      // Complete reset: reload the experience cleanly
-      window.location.reload();
+    btnRefresh.addEventListener('click', (e) => {
+      e.stopPropagation();
+      state.scale = 1;
+      state.panX = 0;
+      state.panY = 0;
+      updateTransform();
+      startPencilDrawing();
+      tryStartAudio();
     });
   }
 
@@ -480,36 +485,60 @@
   });
 
   // --- Divine Audio: Mahishasura Mardini (Droplex Remix / Shanti People) ---
-  // Sound humesha background mein chalega (always playing & looping, even after refresh)
-  function startAlwaysPlayingAudio() {
+  const audioPrompt = document.getElementById('audio-prompt');
+  let audioUnlocked = false;
+
+  function showAudioPrompt() {
+    if (audioPrompt && !audioUnlocked) {
+      audioPrompt.classList.remove('hidden');
+    }
+  }
+
+  function hideAudioPrompt() {
+    if (audioPrompt) {
+      audioPrompt.classList.add('hidden');
+    }
+  }
+
+  function tryStartAudio() {
     if (!divineAudio) return;
     divineAudio.loop = true;
     divineAudio.volume = 0.85;
 
-    const tryPlay = () => {
-      const p = divineAudio.play();
-      if (p !== undefined) {
-        p.then(() => {
-          // Successfully playing
-        }).catch(() => {
-          // If browser policy requires user gesture, start immediately on first interaction
-          const unlock = () => {
-            divineAudio.play().catch(() => {});
-            ['click', 'pointerdown', 'touchstart', 'keydown'].forEach(ev => {
-              window.removeEventListener(ev, unlock);
-            });
-          };
-          ['click', 'pointerdown', 'touchstart', 'keydown'].forEach(ev => {
-            window.addEventListener(ev, unlock, { once: true, passive: true });
-          });
+    const playPromise = divineAudio.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          audioUnlocked = true;
+          hideAudioPrompt();
+        })
+        .catch(() => {
+          // Browser blocked unmuted autoplay on initial load, show friendly prompt & listen for gesture
+          showAudioPrompt();
         });
-      }
-    };
-
-    tryPlay();
+    }
   }
 
-  startAlwaysPlayingAudio();
+  // Universal gesture listener to unlock audio on first interaction anywhere
+  function handleGlobalUnlock() {
+    if (!audioUnlocked) {
+      tryStartAudio();
+    }
+  }
+
+  ['click', 'pointerdown', 'touchstart', 'touchend', 'keydown'].forEach(ev => {
+    window.addEventListener(ev, handleGlobalUnlock, { passive: true });
+  });
+
+  if (audioPrompt) {
+    audioPrompt.addEventListener('click', (e) => {
+      e.stopPropagation();
+      tryStartAudio();
+    });
+  }
+
+  // Attempt playback immediately on visit / load
+  tryStartAudio();
 
   // Zoom Controls
   btnZoomIn.addEventListener('click', () => setZoom(state.scale * 1.25));
