@@ -211,27 +211,42 @@
   // Touch Support for mobile
   let touchStartDist = 0;
   let touchStartScale = 1;
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchStartTime = 0;
+  let isDraggingOnTouch = false;
 
   viewport.addEventListener('touchstart', (e) => {
     if (e.touches.length === 1) {
-      state.isPanning = true;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchStartTime = performance.now();
+      isDraggingOnTouch = false;
       state.startX = e.touches[0].clientX - state.panX;
       state.startY = e.touches[0].clientY - state.panY;
     } else if (e.touches.length === 2) {
-      state.isPanning = false;
+      isDraggingOnTouch = false;
       touchStartDist = Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
       );
       touchStartScale = state.scale;
     }
-  });
+  }, { passive: true });
 
   viewport.addEventListener('touchmove', (e) => {
-    if (e.touches.length === 1 && state.isPanning) {
-      state.panX = e.touches[0].clientX - state.startX;
-      state.panY = e.touches[0].clientY - state.startY;
-      updateTransform();
+    if (e.touches.length === 1) {
+      const dx = e.touches[0].clientX - touchStartX;
+      const dy = e.touches[0].clientY - touchStartY;
+      if (Math.hypot(dx, dy) > 10) {
+        isDraggingOnTouch = true;
+      }
+      // Only pan if zoomed in (> 1.05) and dragged deliberately
+      if (state.scale > 1.05 && isDraggingOnTouch) {
+        state.panX = e.touches[0].clientX - state.startX;
+        state.panY = e.touches[0].clientY - state.startY;
+        updateTransform();
+      }
     } else if (e.touches.length === 2) {
       const dist = Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
@@ -245,9 +260,14 @@
   }, { passive: true });
 
   viewport.addEventListener('touchend', () => {
-    state.isPanning = false;
+    const elapsed = performance.now() - touchStartTime;
+    // Clean tap detected: user tapped without dragging > 10px within 500ms
+    if (!isDraggingOnTouch && elapsed < 500) {
+      tryStartAudio();
+    }
+    isDraggingOnTouch = false;
     touchStartDist = 0;
-  });
+  }, { passive: true });
 
   // --- GOLDEN PENCIL LIVE DRAWING ENGINE ---
   let drawQueue = [];
@@ -492,6 +512,19 @@
   // --- Divine Audio: Mahishasura Mardini (Universal Mobile Unlock & Dock Sync) ---
   const audioPrompt = document.getElementById('audio-prompt');
   let audioUnlocked = false;
+  let audioContext = null;
+
+  function unlockAudioEngine() {
+    try {
+      if (!audioContext) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) audioContext = new AudioCtx();
+      }
+      if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+    } catch (e) {}
+  }
 
   function updateSoundUI(isPlaying) {
     if (btnSound) {
@@ -508,10 +541,16 @@
 
   function tryStartAudio() {
     if (!divineAudio) return;
+    unlockAudioEngine();
+
     try {
       divineAudio.muted = false;
-      divineAudio.volume = 0.9;
+      divineAudio.volume = 0.95;
       divineAudio.loop = true;
+
+      if (divineAudio.readyState === 0) {
+        divineAudio.load();
+      }
 
       const playPromise = divineAudio.play();
       if (playPromise !== undefined) {
