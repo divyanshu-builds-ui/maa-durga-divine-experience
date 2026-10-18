@@ -1,0 +1,32 @@
+{
+  "name": "maa-durga-divine-experience",
+  "version": "1.0.0",
+  "description": "A breathtaking 4K golden-outline divine visual experience of Maa Durga featuring sacred geometry, live pencil stroke drawing animation, interactive particles, and high-energy stotram audio.",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y serve . -l 3000",
+    "start": "npx -y serve . -l 3000"
+  },
+  "keywords": [
+    "maa-durga",
+    "svg-animation",
+    "sacred-geometry",
+    "canvas-particles",
+    "golden-lineart",
+    "creative-coding",
+    "frontend",
+    "javascript",
+    "audio-experience",
+    "devotional"
+  ],
+  "author": "Divyanshu Kumar (MakeWard) <hello@makeward.in>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/divyanshu-builds-ui/maa-durga-divine-experience.git"
+  },
+  "homepage": "https://github.com/divyanshu-builds-ui/maa-durga-divine-experience#readme",
+  "bugs": {
+    "url": "https://github.com/divyanshu-builds-ui/maa-durga-divine-experience/issues"
+  },
+  "license": "MIT"
+}

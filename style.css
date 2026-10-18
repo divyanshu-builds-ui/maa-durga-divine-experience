@@ -1,0 +1,612 @@
+/* ==========================================================================
+   Design System & Styling
+   ========================================================================== */
+
+:root {
+  --color-bg: #000000;
+  --color-gold-deep: #D96B14;
+  --color-gold-amber: #FF8A24;
+  --color-gold-bright: #FFB547;
+  --color-gold-light: #FFE6A3;
+  --color-gold-white: #FFF7DB;
+  
+  --font-display: 'Cinzel Decorative', 'Cinzel', serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-devanagari: 'Yatra One', 'Rozha One', 'Cinzel', serif;
+
+  --glow-intensity: 1;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--color-bg);
+  color: var(--color-gold-bright);
+  font-family: var(--font-body);
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Background Atmosphere */
+.divine-canvas-wrap {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at 50% 36%, rgba(255, 138, 36, 0.08) 0%, rgba(25, 12, 3, 0.45) 45%, #000000 85%);
+  overflow: hidden;
+}
+
+/* Subtle Vignette Overlay */
+.vignette-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.85) 95%);
+  z-index: 10;
+}
+
+/* Drifting Golden Embers Canvas */
+#particles-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 15;
+}
+
+/* Sacred Header Inscription - Only Om Durgayai Namah */
+.sacred-header {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 30;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeInHeader 2.5s ease-out forwards;
+}
+
+.sacred-mantra-title {
+  font-family: var(--font-devanagari);
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  letter-spacing: 0.18em;
+  color: var(--color-gold-bright);
+  text-shadow: 0 0 6px rgba(255, 181, 71, 0.3);
+  font-weight: 600;
+}
+
+/* Header Creator Info Button (Refined, visible, delicate lineart) */
+.header-info-btn {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: auto;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid rgba(255, 181, 71, 0.35);
+  color: var(--color-gold-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.62;
+  box-shadow: none;
+  transition: all 0.3s ease;
+}
+
+.header-info-btn svg {
+  width: 15px;
+  height: 15px;
+  transition: transform 0.25s ease;
+}
+
+.header-info-btn:hover {
+  opacity: 1;
+  background: rgba(255, 181, 71, 0.15);
+  border-color: rgba(255, 181, 71, 0.7);
+  box-shadow: 0 0 12px rgba(255, 138, 36, 0.35);
+  transform: translateY(-50%) scale(1.08);
+}
+
+/* Original Pencil Icon Cursor (Crisp, Depth Shadow, Zero Blurry Glow) */
+#pencil-cursor {
+  will-change: transform;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7));
+  transition: opacity 0.35s ease;
+}
+
+/* Live Drawing Pure Line Art Styles (Crisp Golden Vector Lines - Zero Blurry Glow) */
+.divine-draw-path {
+  fill: none !important;
+  stroke: #FFB547;
+  stroke-width: 1.25px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  filter: none;
+  transition: opacity 0.15s ease, stroke-opacity 0.5s ease;
+}
+
+.mandala-draw-elem {
+  fill: none !important;
+  stroke: #FFB547;
+  stroke-width: 0.95px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  transition: opacity 0.15s ease, stroke-opacity 0.5s ease;
+}
+
+/* 100% Consistent Pure Sacred Golden Line Art (Strictly Zero Solid Color Fills) */
+body.drawing-active .divine-draw-path,
+body.drawing-completed .divine-draw-path,
+body.drawing-active .mandala-draw-elem,
+body.drawing-completed .mandala-draw-elem {
+  opacity: 1;
+}
+
+.divine-draw-path,
+.mandala-draw-elem {
+  fill: none !important;
+}
+
+/* Sacred Highlights: Shimmer upon drawing completion */
+.divine-highlight-path {
+  fill: none !important;
+  stroke: #FFF4D0;
+  stroke-width: 0.85px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  transition: opacity 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.drawing-completed .divine-highlight-path {
+  opacity: 0.45;
+}
+
+/* Main Shrine Artwork Container */
+.shrine-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  cursor: grab;
+  padding-top: 25px;
+  padding-bottom: 45px;
+}
+
+.shrine-viewport:active {
+  cursor: grabbing;
+}
+
+.svg-transform-container {
+  position: relative;
+  height: min(78vh, 820px);
+  max-width: min(90vw, 540px);
+  aspect-ratio: 682 / 1024;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.15s ease-out;
+  transform-origin: center center;
+}
+
+#maa-durga-svg {
+  width: 100%;
+  height: 100%;
+  filter: none;
+}
+
+/* Animations for SVG Elements */
+.sacred-mandala {
+  transform-origin: 341px 255px;
+  animation: rotateMandala 90s linear infinite;
+}
+
+@keyframes rotateMandala {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Divine Groups: Crisp & Stationary with Zero Blurry Displacements */
+#group-crown-mukut,
+#group-divine-face,
+#group-flowing-hair,
+#group-divine-body-arms,
+#group-weapon-trishula,
+#group-weapon-khadga,
+#group-weapon-chakra,
+#group-weapon-gada,
+#group-weapon-shankha,
+#group-weapon-dhanush,
+#group-weapon-padma,
+#group-sari-drapery,
+#group-simhavahana-lion {
+  filter: none !important;
+}
+
+/* Bottom Glassmorphic Floating Control Dock */
+.control-dock {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(18, 12, 6, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 181, 71, 0.22);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 18px rgba(255, 138, 36, 0.12);
+  animation: fadeInDock 2s ease-out forwards;
+}
+
+.dock-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-gold-bright);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.dock-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  transition: transform 0.2s ease;
+}
+
+.dock-btn:hover {
+  background: rgba(255, 181, 71, 0.15);
+  border-color: rgba(255, 181, 71, 0.4);
+  color: var(--color-gold-light);
+  box-shadow: 0 0 12px rgba(255, 138, 36, 0.3);
+}
+
+.dock-btn.active {
+  background: rgba(255, 138, 36, 0.28);
+  border-color: rgba(255, 181, 71, 0.6);
+  color: #FFFFFF;
+  box-shadow: 0 0 14px rgba(255, 138, 36, 0.4);
+}
+
+.dock-separator {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 181, 71, 0.2);
+}
+
+/* Zoom indicator pill */
+.zoom-indicator {
+  font-size: 0.72rem;
+  color: var(--color-gold-light);
+  opacity: 0.75;
+  font-variant-numeric: tabular-nums;
+  min-width: 38px;
+  text-align: center;
+}
+
+/* Sacred Lore Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  padding: 20px;
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  position: relative;
+  max-width: 520px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: radial-gradient(circle at 50% 0%, #1c0e05 0%, #0c0602 60%, #050201 100%);
+  border: 1px solid rgba(255, 181, 71, 0.35);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.95), 0 0 35px rgba(255, 138, 36, 0.22);
+  border-radius: 18px;
+  padding: 32px 28px 24px;
+  color: var(--color-gold-light);
+  transform: translateY(20px) scale(0.97);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-backdrop.open .modal-card {
+  transform: translateY(0) scale(1);
+}
+
+.creator-modal-card {
+  text-align: center;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: transparent;
+  border: none;
+  color: var(--color-gold-bright);
+  font-size: 1.6rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  background: rgba(255, 181, 71, 0.2);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  color: #FFFFFF;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+  text-shadow: 0 0 16px rgba(255, 181, 71, 0.4);
+}
+
+.modal-subtitle {
+  font-size: 0.88rem;
+  color: var(--color-gold-amber);
+  margin-bottom: 16px;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+}
+
+.creator-desc {
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: rgba(255, 247, 219, 0.85);
+  margin-bottom: 22px;
+  text-align: left;
+  background: rgba(255, 181, 71, 0.04);
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 181, 71, 0.14);
+}
+
+.creator-links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 22px;
+  text-align: left;
+}
+
+.creator-link-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(255, 181, 71, 0.05);
+  border: 1px solid rgba(255, 181, 71, 0.22);
+  text-decoration: none;
+  color: var(--color-gold-light);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.creator-link-card:hover {
+  background: rgba(255, 181, 71, 0.15);
+  border-color: rgba(255, 181, 71, 0.65);
+  color: #FFFFFF;
+  transform: translateX(4px);
+  box-shadow: 0 4px 20px rgba(255, 138, 36, 0.25);
+}
+
+.link-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255, 181, 71, 0.12);
+  border: 1px solid rgba(255, 181, 71, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.link-icon-wrap svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--color-gold-bright);
+}
+
+.link-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.link-type {
+  font-size: 0.68rem;
+  color: var(--color-gold-amber);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.link-title {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.link-sub {
+  font-size: 0.74rem;
+  color: rgba(255, 230, 163, 0.7);
+}
+
+.external-arrow {
+  width: 16px;
+  height: 16px;
+  fill: var(--color-gold-amber);
+  opacity: 0.6;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.creator-link-card:hover .external-arrow {
+  opacity: 1;
+  fill: #FFFFFF;
+  transform: translate(2px, -2px);
+}
+
+.modal-footer-note {
+  font-size: 0.76rem;
+  color: var(--color-gold-amber);
+  opacity: 0.8;
+  letter-spacing: 0.08em;
+  border-top: 1px solid rgba(255, 181, 71, 0.16);
+  padding-top: 14px;
+}
+
+/* Static Fallback Mode (prefers-reduced-motion & manual toggle) */
+body.static-mode .sacred-mandala,
+body.static-mode .divine-aura-radial,
+body.static-mode .divine-highlights-path,
+body.static-mode #group-crown-mukut,
+body.static-mode #group-flowing-hair,
+body.static-mode #group-sari-drapery,
+body.static-mode #group-weapon-trishula,
+body.static-mode #group-simhavahana-lion {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sacred-mandala,
+  .divine-aura-radial,
+  .divine-highlights-path,
+  #group-crown-mukut,
+  #group-flowing-hair,
+  #group-sari-drapery,
+  #group-weapon-trishula,
+  #group-simhavahana-lion,
+  .sacred-header,
+  .control-dock {
+    animation: none !important;
+  }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .sacred-header {
+    top: 12px;
+  }
+  .header-info-btn {
+    right: 14px;
+    width: 26px;
+    height: 26px;
+    opacity: 0.62;
+  }
+  .header-info-btn svg {
+    width: 13px;
+    height: 13px;
+  }
+  .creator-modal-card {
+    padding: 24px 18px 20px;
+    max-height: 90vh;
+  }
+  .sacred-shloka {
+    display: none;
+  }
+  .control-dock {
+    bottom: 14px;
+    padding: 6px 10px;
+    gap: 6px;
+    width: 92vw;
+    justify-content: space-around;
+  }
+  .dock-btn {
+    padding: 6px 8px;
+    font-size: 0.72rem;
+  }
+  .dock-btn span {
+    display: none;
+  }
+  .dock-btn svg {
+    margin: 0;
+  }
+  .dock-btn.show-label span {
+    display: inline;
+  }
+}
+
+/* Fade in animations */
+@keyframes fadeInHeader {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDock {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 15px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
