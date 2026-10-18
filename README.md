@@ -46,7 +46,8 @@ maa-durga-divine-experience/
 ├── index.html              # Main HTML markup, embedded SVG artwork, and control dock
 ├── style.css               # Design system, glassmorphism, glowing aesthetics, & responsiveness
 ├── app.js                  # Particle engine, live drawing scheduler, pan/zoom, & audio controller
-├── mahishasura_mardini.webm # High-quality Opus/WebM divine audio track
+├── mahishasura_mardini.m4a  # Universal AAC audio track (Android, iOS & Desktop)
+├── mahishasura_mardini.webm # High-quality Opus/WebM audio fallback
 ├── package.json            # Project metadata and quick local dev scripts
 ├── LICENSE                 # MIT Open-Source License
 ├── .gitignore              # Files ignored by git

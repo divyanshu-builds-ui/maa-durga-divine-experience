@@ -467,6 +467,7 @@
 
   // Motion Toggle: Always active by default
   btnMotion.addEventListener('click', () => {
+    tryStartAudio();
     state.motionActive = !state.motionActive;
     document.body.classList.toggle('static-mode', !state.motionActive);
     btnMotion.classList.toggle('active', state.motionActive);
@@ -502,20 +503,24 @@
 
   function tryStartAudio() {
     if (!divineAudio) return;
-    divineAudio.loop = true;
-    divineAudio.volume = 0.85;
+    try {
+      divineAudio.loop = true;
+      divineAudio.volume = 0.85;
 
-    const playPromise = divineAudio.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          audioUnlocked = true;
-          hideAudioPrompt();
-        })
-        .catch(() => {
-          // Browser blocked unmuted autoplay on initial load, show friendly prompt & listen for gesture
-          showAudioPrompt();
-        });
+      const playPromise = divineAudio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            audioUnlocked = true;
+            hideAudioPrompt();
+          })
+          .catch(() => {
+            // Browser blocked unmuted autoplay on initial load, show friendly prompt & listen for gesture
+            showAudioPrompt();
+          });
+      }
+    } catch (e) {
+      showAudioPrompt();
     }
   }
 
@@ -528,21 +533,37 @@
 
   ['click', 'pointerdown', 'touchstart', 'touchend', 'keydown'].forEach(ev => {
     window.addEventListener(ev, handleGlobalUnlock, { passive: true });
+    document.addEventListener(ev, handleGlobalUnlock, { passive: true });
   });
+
+  if (viewport) {
+    viewport.addEventListener('touchstart', handleGlobalUnlock, { passive: true });
+    viewport.addEventListener('click', handleGlobalUnlock, { passive: true });
+  }
 
   if (audioPrompt) {
     audioPrompt.addEventListener('click', (e) => {
       e.stopPropagation();
       tryStartAudio();
     });
+    audioPrompt.addEventListener('touchstart', (e) => {
+      e.stopPropagation();
+      tryStartAudio();
+    }, { passive: true });
   }
 
   // Attempt playback immediately on visit / load
   tryStartAudio();
 
   // Zoom Controls
-  btnZoomIn.addEventListener('click', () => setZoom(state.scale * 1.25));
-  btnZoomOut.addEventListener('click', () => setZoom(state.scale * 0.8));
+  btnZoomIn.addEventListener('click', () => {
+    tryStartAudio();
+    setZoom(state.scale * 1.25);
+  });
+  btnZoomOut.addEventListener('click', () => {
+    tryStartAudio();
+    setZoom(state.scale * 0.8);
+  });
   
   if (btnReset) {
     btnReset.addEventListener('click', () => {

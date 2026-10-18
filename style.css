@@ -260,29 +260,32 @@ body.drawing-completed .divine-highlight-path {
 /* Ambient Audio Activation Floating Banner (Only shown if browser blocks unmuted autoplay) */
 .audio-prompt {
   position: fixed;
-  bottom: calc(max(18px, env(safe-area-inset-bottom, 18px)) + 54px);
+  bottom: 74px;
+  bottom: calc(74px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%);
-  z-index: 85;
+  z-index: 1000;
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 18px;
   border-radius: 999px;
-  background: rgba(18, 12, 6, 0.88);
+  background: rgba(18, 12, 6, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 181, 71, 0.45);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9), 0 0 18px rgba(255, 138, 36, 0.35);
+  border: 1px solid rgba(255, 181, 71, 0.55);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9), 0 0 18px rgba(255, 138, 36, 0.4);
   color: var(--color-gold-light);
   font-family: var(--font-body);
   font-size: 0.82rem;
   letter-spacing: 0.04em;
   cursor: pointer;
-  animation: promptPulse 2s ease-in-out infinite, fadeInDock 0.6s ease-out;
+  animation: promptPulse 2s ease-in-out infinite;
   transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
   pointer-events: auto;
   user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .audio-prompt.hidden {
@@ -320,22 +323,25 @@ body.drawing-completed .divine-highlight-path {
 /* Bottom Glassmorphic Floating Control Dock */
 .control-dock {
   position: fixed;
-  bottom: max(18px, env(safe-area-inset-bottom, 18px));
+  bottom: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%);
-  z-index: 80;
+  z-index: 999;
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 8px 16px;
   border-radius: 999px;
-  background: rgba(18, 12, 6, 0.72);
+  background: rgba(18, 12, 6, 0.82);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 181, 71, 0.28);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.85), 0 0 18px rgba(255, 138, 36, 0.15);
+  border: 1px solid rgba(255, 181, 71, 0.35);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.85), 0 0 18px rgba(255, 138, 36, 0.2);
   opacity: 1;
-  animation: fadeInDock 1.5s ease-out forwards;
+  visibility: visible;
+  pointer-events: auto;
+  animation: fadeInDock 1.2s ease-out forwards;
 }
 
 .dock-btn {
@@ -353,6 +359,8 @@ body.drawing-completed .divine-highlight-path {
   gap: 6px;
   transition: all 0.25s ease;
   white-space: nowrap;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .dock-btn svg {
@@ -639,25 +647,35 @@ body.static-mode #group-simhavahana-lion {
     max-height: 90vh;
   }
   .audio-prompt {
-    position: fixed;
-    bottom: calc(max(14px, env(safe-area-inset-bottom, 14px)) + 48px);
+    position: fixed !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    bottom: 64px !important;
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
     font-size: 0.74rem;
     padding: 6px 14px;
     white-space: nowrap;
-    z-index: 85;
+    z-index: 1000 !important;
   }
   .sacred-shloka {
     display: none;
   }
   .control-dock {
-    position: fixed;
-    bottom: max(14px, env(safe-area-inset-bottom, 14px));
+    position: fixed !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    bottom: 16px !important;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
     padding: 6px 12px;
     gap: 8px;
     width: auto;
     max-width: calc(100vw - 20px);
     justify-content: center;
-    z-index: 80;
+    z-index: 999 !important;
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
   }
   .dock-btn {
     padding: 6px 10px;

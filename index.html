@@ -1893,6 +1893,7 @@
 </svg>
       </div>
     </section>
+  </main>
 
     <!-- Floating Audio Prompt for Autoplay-Restricted Browsers -->
     <div id="audio-prompt" class="audio-prompt hidden" role="button" aria-label="Enable Divine Audio">
@@ -1929,7 +1930,10 @@
     </nav>
 
     <!-- Divine Audio Background Track: Mahishasura Mardini (Droplex Remix / Shanti People) -->
-    <audio id="divine-audio" src="mahishasura_mardini.webm" autoplay loop preload="auto"></audio>
+    <audio id="divine-audio" loop preload="auto" playsinline webkit-playsinline>
+      <source src="mahishasura_mardini.m4a" type="audio/mp4">
+      <source src="mahishasura_mardini.webm" type="audio/webm">
+    </audio>
 
     <!-- Creator & Studio Information Modal -->
     <div class="modal-backdrop" id="creator-modal" aria-hidden="true" role="dialog" aria-labelledby="creator-name">
@@ -1989,7 +1993,6 @@
         </div>
       </div>
     </div>
-  </main>
 
   <script src="app.js"></script>
 </body>
