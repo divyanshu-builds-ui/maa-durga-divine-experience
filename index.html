@@ -1896,19 +1896,25 @@
   </main>
 
     <!-- Floating Audio Prompt for Autoplay-Restricted Browsers -->
-    <div id="audio-prompt" class="audio-prompt hidden" role="button" aria-label="Enable Divine Audio">
+    <div id="audio-prompt" class="audio-prompt" role="button" aria-label="Enable Divine Audio">
       <div class="audio-prompt-icon">
         <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
       </div>
       <span>Tap anywhere to enable music</span>
     </div>
 
-    <!-- Minimal Bottom Control Dock: Refresh/Replay, Motion & Zoom -->
+    <!-- Minimal Bottom Control Dock: Refresh/Replay, Motion, Music & Zoom -->
     <nav class="control-dock" aria-label="Divine Controls">
       <!-- Refresh / Replay Button -->
       <button class="dock-btn show-label" id="btn-refresh" title="Reset everything and re-draw from the beginning">
         <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
         <span>Replay</span>
+      </button>
+
+      <!-- Divine Music Toggle Button -->
+      <button class="dock-btn show-label" id="btn-sound" title="Toggle divine music">
+        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        <span>Music</span>
       </button>
 
       <!-- Motion Toggle (Always active by default) -->
@@ -1930,7 +1936,7 @@
     </nav>
 
     <!-- Divine Audio Background Track: Mahishasura Mardini (Droplex Remix / Shanti People) -->
-    <audio id="divine-audio" loop preload="auto" playsinline webkit-playsinline>
+    <audio id="divine-audio" src="mahishasura_mardini.m4a" loop preload="auto" playsinline webkit-playsinline>
       <source src="mahishasura_mardini.m4a" type="audio/mp4">
       <source src="mahishasura_mardini.webm" type="audio/webm">
     </audio>

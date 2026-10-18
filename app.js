@@ -26,8 +26,9 @@
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas.getContext('2d');
 
-  // Minimal Dock Buttons: Refresh, Motion & Zoom
+  // Minimal Dock Buttons: Refresh, Music, Motion & Zoom
   const btnRefresh = document.getElementById('btn-refresh');
+  const btnSound = document.getElementById('btn-sound');
   const btnMotion = document.getElementById('btn-motion');
   const divineAudio = document.getElementById('divine-audio');
   const btnReset = document.getElementById('btn-reset');
@@ -40,9 +41,34 @@
   const sacredMandalaGroup = document.getElementById('sacred-mandala-halo');
   const auraCircle = document.querySelector('.divine-aura-radial');
 
-  // --- Canvas Golden Embers Particle System ---
+  // --- High-Performance GPU Pre-rendered Ember Sprites (Zero Dynamic Gradients) ---
+  const spriteAmber = document.createElement('canvas');
+  spriteAmber.width = 32;
+  spriteAmber.height = 32;
+  const sCtxA = spriteAmber.getContext('2d');
+  const gA = sCtxA.createRadialGradient(16, 16, 0, 16, 16, 16);
+  gA.addColorStop(0, 'rgba(255, 245, 210, 1)');
+  gA.addColorStop(0.25, 'rgba(255, 181, 71, 0.85)');
+  gA.addColorStop(0.65, 'rgba(255, 138, 36, 0.35)');
+  gA.addColorStop(1, 'rgba(255, 138, 36, 0)');
+  sCtxA.fillStyle = gA;
+  sCtxA.fillRect(0, 0, 32, 32);
+
+  const spriteGold = document.createElement('canvas');
+  spriteGold.width = 32;
+  spriteGold.height = 32;
+  const sCtxG = spriteGold.getContext('2d');
+  const gG = sCtxG.createRadialGradient(16, 16, 0, 16, 16, 16);
+  gG.addColorStop(0, 'rgba(255, 250, 225, 1)');
+  gG.addColorStop(0.25, 'rgba(255, 210, 110, 0.9)');
+  gG.addColorStop(0.65, 'rgba(255, 160, 50, 0.35)');
+  gG.addColorStop(1, 'rgba(255, 160, 50, 0)');
+  sCtxG.fillStyle = gG;
+  sCtxG.fillRect(0, 0, 32, 32);
+
+  // --- Lightweight Golden Embers Particle System ---
   let particles = [];
-  const PARTICLE_COUNT = 36;
+  const PARTICLE_COUNT = 32;
   let animFrameId = null;
 
   class EmberParticle {
@@ -90,30 +116,11 @@
 
     draw() {
       if (this.alpha <= 0) return;
-
+      ctx.globalAlpha = this.alpha;
       const currentRadius = this.radius * (1 + Math.sin(this.pulsePhase) * 0.15);
-      const gradient = ctx.createRadialGradient(
-        this.x, this.y, 0,
-        this.x, this.y, currentRadius * 3
-      );
-      
-      const r = 255;
-      const g = this.hue === 35 ? 138 : 190;
-      const b = this.hue === 35 ? 36 : 70;
-
-      gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${this.alpha})`);
-      gradient.addColorStop(0.4, `rgba(${r}, ${g}, ${b}, ${this.alpha * 0.45})`);
-      gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, currentRadius * 3, 0, Math.PI * 2);
-      ctx.fillStyle = gradient;
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, currentRadius * 0.6, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255, 245, 210, ${this.alpha * 0.9})`;
-      ctx.fill();
+      const size = currentRadius * 6;
+      const sprite = this.hue === 35 ? spriteAmber : spriteGold;
+      ctx.drawImage(sprite, this.x - size / 2, this.y - size / 2, size, size);
     }
   }
 
@@ -125,7 +132,8 @@
   function initParticles() {
     resizeCanvas();
     particles = [];
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
+    const count = window.innerWidth < 768 ? 18 : PARTICLE_COUNT;
+    for (let i = 0; i < count; i++) {
       particles.push(new EmberParticle());
     }
   }
@@ -137,6 +145,7 @@
         particles[i].update();
         particles[i].draw();
       }
+      ctx.globalAlpha = 1;
     }
     animFrameId = requestAnimationFrame(animateParticles);
   }
@@ -372,13 +381,6 @@
         if (pixelsToAdvance < remainingOnStroke) {
           strokeDist += pixelsToAdvance;
           item.elem.style.strokeDashoffset = `${item.len - strokeDist}`;
-
-          // Position pencil tip directly on current coordinate
-          if (pencilCursor) {
-            const pt = getStrokePoint(item.elem, strokeDist, item.len);
-            pencilCursor.setAttribute('transform', `translate(${pt.x.toFixed(1)}, ${pt.y.toFixed(1)})`);
-          }
-
           pixelsToAdvance = 0;
         } else {
           // Finish current stroke
@@ -398,12 +400,14 @@
           if (currGroup && currGroup !== nextGroup) {
             currGroup.classList.add('illuminated');
           }
-
-          if (currentIndex < drawQueue.length && pencilCursor) {
-            const nextPt = getStrokePoint(nextItem.elem, 0, nextItem.len);
-            pencilCursor.setAttribute('transform', `translate(${nextPt.x.toFixed(1)}, ${nextPt.y.toFixed(1)})`);
-          }
         }
+      }
+
+      // Update pencil tip position smoothly once per frame (eliminates layout thrashing)
+      if (pencilCursor && currentIndex < drawQueue.length) {
+        const activeItem = drawQueue[currentIndex];
+        const pt = getStrokePoint(activeItem.elem, strokeDist, activeItem.len);
+        pencilCursor.setAttribute('transform', `translate(${pt.x.toFixed(1)}, ${pt.y.toFixed(1)})`);
       }
 
       if (currentIndex < drawQueue.length) {
@@ -485,62 +489,75 @@
     }
   });
 
-  // --- Divine Audio: Mahishasura Mardini (Droplex Remix / Shanti People) ---
+  // --- Divine Audio: Mahishasura Mardini (Universal Mobile Unlock & Dock Sync) ---
   const audioPrompt = document.getElementById('audio-prompt');
   let audioUnlocked = false;
 
-  function showAudioPrompt() {
-    if (audioPrompt && !audioUnlocked) {
-      audioPrompt.classList.remove('hidden');
+  function updateSoundUI(isPlaying) {
+    if (btnSound) {
+      btnSound.classList.toggle('active', isPlaying);
     }
-  }
-
-  function hideAudioPrompt() {
     if (audioPrompt) {
-      audioPrompt.classList.add('hidden');
+      if (isPlaying) {
+        audioPrompt.classList.add('hidden');
+      } else {
+        audioPrompt.classList.remove('hidden');
+      }
     }
   }
 
   function tryStartAudio() {
     if (!divineAudio) return;
     try {
+      divineAudio.muted = false;
+      divineAudio.volume = 0.9;
       divineAudio.loop = true;
-      divineAudio.volume = 0.85;
 
       const playPromise = divineAudio.play();
       if (playPromise !== undefined) {
         playPromise
           .then(() => {
             audioUnlocked = true;
-            hideAudioPrompt();
+            updateSoundUI(true);
           })
           .catch(() => {
-            // Browser blocked unmuted autoplay on initial load, show friendly prompt & listen for gesture
-            showAudioPrompt();
+            // Autoplay blocked by browser policy on load; keep prompt visible and await user tap
+            updateSoundUI(false);
           });
       }
     } catch (e) {
-      showAudioPrompt();
+      updateSoundUI(false);
     }
   }
 
-  // Universal gesture listener to unlock audio on first interaction anywhere
+  function toggleSound() {
+    if (!divineAudio) return;
+    if (divineAudio.paused) {
+      tryStartAudio();
+    } else {
+      divineAudio.pause();
+      updateSoundUI(false);
+    }
+  }
+
+  // Universal gesture listener: any tap or touch anywhere on the page starts audio
   function handleGlobalUnlock() {
-    if (!audioUnlocked) {
+    if (!audioUnlocked || (divineAudio && divineAudio.paused)) {
       tryStartAudio();
     }
   }
 
-  ['click', 'pointerdown', 'touchstart', 'touchend', 'keydown'].forEach(ev => {
+  ['click', 'pointerdown', 'touchstart', 'touchend'].forEach(ev => {
     window.addEventListener(ev, handleGlobalUnlock, { passive: true });
     document.addEventListener(ev, handleGlobalUnlock, { passive: true });
   });
 
   if (viewport) {
+    viewport.addEventListener('click', handleGlobalUnlock);
     viewport.addEventListener('touchstart', handleGlobalUnlock, { passive: true });
-    viewport.addEventListener('click', handleGlobalUnlock, { passive: true });
   }
 
+  // Floating "Tap anywhere" badge direct tap
   if (audioPrompt) {
     audioPrompt.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -552,7 +569,25 @@
     }, { passive: true });
   }
 
-  // Attempt playback immediately on visit / load
+  // Dock Music button tap/click
+  if (btnSound) {
+    btnSound.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleSound();
+    });
+    btnSound.addEventListener('touchstart', (e) => {
+      e.stopPropagation();
+      toggleSound();
+    }, { passive: true });
+  }
+
+  // Native media event listeners
+  if (divineAudio) {
+    divineAudio.addEventListener('play', () => updateSoundUI(true));
+    divineAudio.addEventListener('pause', () => updateSoundUI(false));
+  }
+
+  // Attempt initial playback immediately on visit
   tryStartAudio();
 
   // Zoom Controls

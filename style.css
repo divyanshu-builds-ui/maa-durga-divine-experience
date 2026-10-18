@@ -217,18 +217,24 @@ body.drawing-completed .divine-highlight-path {
   align-items: center;
   transition: transform 0.15s ease-out;
   transform-origin: center center;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 #maa-durga-svg {
   width: 100%;
   height: 100%;
   filter: none;
+  shape-rendering: geometricPrecision;
+  will-change: transform;
 }
 
 /* Animations for SVG Elements */
 .sacred-mandala {
   transform-origin: 341px 255px;
   animation: rotateMandala 90s linear infinite;
+  will-change: transform;
+  transform-box: view-box;
 }
 
 @keyframes rotateMandala {
@@ -656,6 +662,8 @@ body.static-mode #group-simhavahana-lion {
     padding: 6px 14px;
     white-space: nowrap;
     z-index: 1000 !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
   }
   .sacred-shloka {
     display: none;
@@ -666,16 +674,18 @@ body.static-mode #group-simhavahana-lion {
     transform: translateX(-50%) !important;
     bottom: 16px !important;
     bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
-    padding: 6px 12px;
-    gap: 8px;
+    padding: 6px 10px;
+    gap: 6px;
     width: auto;
-    max-width: calc(100vw - 20px);
+    max-width: calc(100vw - 16px);
     justify-content: center;
     z-index: 999 !important;
     display: flex !important;
     opacity: 1 !important;
     visibility: visible !important;
     pointer-events: auto !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
   }
   .dock-btn {
     padding: 6px 10px;
