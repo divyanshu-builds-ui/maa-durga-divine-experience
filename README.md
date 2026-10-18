@@ -11,7 +11,7 @@
   <b>A breathtaking, dark-themed 4K golden-outline divine visual experience of Maa Durga featuring sacred geometry, real-time live pencil stroke drawing animation, interactive particle embers, and high-energy devotional stotram audio.</b>
 </p>
 
-[✨ View Demo](https://divyanshu-builds-ui.github.io/maa-durga-divine-experience/) • [⚡ Quick Start](#-quick-start) • [🎨 Features](#-features) • [👨‍💻 Creator](#-creator--studio)
+[✨ View Live (durga.makeward.in)](https://durga.makeward.in/) • [⚡ Quick Start](#-quick-start) • [🎨 Features](#-features) • [👨‍💻 Creator](#-creator--studio)
 
 </div>
 
