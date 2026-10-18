@@ -26,9 +26,8 @@
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas.getContext('2d');
 
-  // Minimal Dock Buttons: Refresh, Music, Motion & Zoom
+  // Minimal Dock Buttons: Refresh, Motion & Zoom
   const btnRefresh = document.getElementById('btn-refresh');
-  const btnSound = document.getElementById('btn-sound');
   const btnMotion = document.getElementById('btn-motion');
   const divineAudio = document.getElementById('divine-audio');
   const btnReset = document.getElementById('btn-reset');
@@ -527,9 +526,6 @@
   }
 
   function updateSoundUI(isPlaying) {
-    if (btnSound) {
-      btnSound.classList.toggle('active', isPlaying);
-    }
     if (audioPrompt) {
       if (isPlaying) {
         audioPrompt.classList.add('hidden');
@@ -605,18 +601,6 @@
     audioPrompt.addEventListener('touchstart', (e) => {
       e.stopPropagation();
       tryStartAudio();
-    }, { passive: true });
-  }
-
-  // Dock Music button tap/click
-  if (btnSound) {
-    btnSound.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleSound();
-    });
-    btnSound.addEventListener('touchstart', (e) => {
-      e.stopPropagation();
-      toggleSound();
     }, { passive: true });
   }
 
